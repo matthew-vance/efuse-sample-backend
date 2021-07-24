@@ -10,6 +10,6 @@ describe("Root", () => {
   });
 
   test("GET /", async () => {
-    await request(app).get("/");
+    await request(app).get("/api").expect(200);
   });
 });

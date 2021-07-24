@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import pino from "express-pino-logger";
+import router from "./router";
 
 export const createApp = (): Express => {
   const app = express();
@@ -7,9 +8,7 @@ export const createApp = (): Express => {
   app.use(pino());
   app.use(express.json());
 
-  app.get("/", (req, res) => {
-    res.send("Hello World!");
-  });
+  app.use("/api", router);
 
   return app;
 };
