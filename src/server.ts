@@ -1,10 +1,14 @@
 import { createApp } from "./app";
+import { connectToDb } from "./utils";
 
-const startServer = () => {
+const startServer = async () => {
   const port = 5000;
-  const app = createApp();
+  const mongoUri = "mongodb://localhost:27017/efuse";
 
-  return app.listen(port, () => {
+  const app = createApp();
+  await connectToDb(mongoUri);
+
+  app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);
   });
 };
