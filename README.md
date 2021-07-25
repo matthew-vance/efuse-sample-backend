@@ -1,5 +1,7 @@
 # eFuse Sample Backend
 
+[![CI](https://github.com/matthew-vance/efuse-sample-backend/actions/workflows/main.yml/badge.svg)](https://github.com/matthew-vance/efuse-sample-backend/actions/workflows/main.yml)
+
 ## Description
 
 eFuse sample backend app.
