@@ -12,8 +12,10 @@ afterAll(() => {
 
 it("sets defaults", () => {
   delete process.env.MONGO_URI;
+  delete process.env.NODE_ENV;
 
   const { env } = require("./env");
 
+  expect(env.nodeEnv).toEqual("development");
   expect(env.mongoUri).toEqual("");
 });
