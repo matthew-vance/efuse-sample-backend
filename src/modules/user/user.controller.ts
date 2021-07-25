@@ -9,7 +9,7 @@ const getById: RequestHandler = (req, res) => {
 const post: RequestHandler = async (req, res, next) => {
   try {
     const user = await service.create(req.body);
-    const locationUri = `/api/user/${user?._id}`;
+    const locationUri = `/api/user/${user._id}`;
     res.location(locationUri).status(201).json({
       location: locationUri,
       entity: user,

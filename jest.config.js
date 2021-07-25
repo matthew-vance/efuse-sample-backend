@@ -4,4 +4,5 @@ module.exports = {
   testEnvironment: "node",
   collectCoverageFrom: ["./src/**/*.(t|j)s"],
   coverageDirectory: "./coverage",
+  setupFiles: ["./jestSetup.js"],
 };

@@ -4,4 +4,12 @@ services:
       context: .
     ports:
       - "5000:5000"
+    environment:
+      PORT: 5000
+      MONGO_URI: mongodb://mongodb/efuse
+    depends_on:
+      - mongodb
     restart: always
+
+  mongodb:
+    image: mongo:5

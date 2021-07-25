@@ -9,7 +9,7 @@ ENV NODE_PATH=./dist
 RUN npm run build
 
 FROM node:14.17-alpine AS production
-WORKDIR /efuse-backend-sample
+WORKDIR /efuse-sample-backend
 ENV NODE_ENV=production
 ENV NODE_PATH=./dist
 COPY package*.json ./

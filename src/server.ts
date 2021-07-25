@@ -1,12 +1,20 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { createApp } from "./app";
-import { connectToDb } from "./utils";
+import { env, connectToDb } from "./utils";
 
 const startServer = async () => {
   const port = 5000;
-  const mongoUri = "mongodb://localhost:27017/efuse";
+  const { mongoUri } = env;
 
   const app = createApp();
-  await connectToDb(mongoUri);
+
+  try {
+    await connectToDb(mongoUri);
+  } catch {
+    console.error("Error connecting to MongoDB. Check your MONGO_URI env var.");
+    process.exit(1);
+  }
 
   app.listen(port, () => {
     console.log(`App listening at http://localhost:${port}`);

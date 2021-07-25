@@ -15,4 +15,8 @@ module.exports = {
     jest: true,
   },
   ignorePatterns: [".eslintrc.js"],
+  rules: {
+    "no-empty-function": "off",
+    "@typescript-eslint/no-empty-function": "off",
+  },
 };
