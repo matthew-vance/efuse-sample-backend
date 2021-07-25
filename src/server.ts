@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { createApp } from "./app";
-import { env, connectToDb } from "./utils";
+import { env, connectToDb, shutdown } from "./utils";
 
 const startServer = async () => {
   const port = 5000;
@@ -13,7 +13,7 @@ const startServer = async () => {
     await connectToDb(mongoUri);
   } catch {
     console.error("Error connecting to MongoDB. Check your MONGO_URI env var.");
-    process.exit(1);
+    shutdown(1);
   }
 
   app.listen(port, () => {

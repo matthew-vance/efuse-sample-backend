@@ -1,12 +1,14 @@
 import { mocked } from "ts-jest/utils";
 import { Express } from "express";
 import { createApp } from "./app";
-import { connectToDb } from "./utils";
+import { connectToDb, shutdown } from "./utils";
+import { mockConsoleLog, mockConsoleError } from "../testUtils";
 
 jest.mock("../src/app");
 jest.mock("../src/utils");
 
 const mockConnectToDb = mocked(connectToDb);
+const mockShutdown = mocked(shutdown);
 const mockCreateApp = mocked(createApp, true);
 
 describe("Server", () => {
@@ -19,7 +21,6 @@ describe("Server", () => {
       cb();
     });
 
-    const mockLog = jest.spyOn(console, "log").mockImplementation(() => {});
     mockCreateApp.mockReturnValue({
       listen: mockListen,
     } as unknown as Express);
@@ -32,15 +33,13 @@ describe("Server", () => {
       expect(mockCreateApp).toBeCalledWith();
       expect(mockConnectToDb).toBeCalledWith("testmongouri");
       expect(mockListen).toBeCalledWith(5000, expect.any(Function));
-      expect(mockLog).toBeCalledWith("App listening at http://localhost:5000");
+      expect(mockConsoleLog).toBeCalledWith(
+        "App listening at http://localhost:5000"
+      );
     });
   });
 
   it("exits when there is a db connection error", () => {
-    const mockError = jest.spyOn(console, "error").mockImplementation(() => {});
-    const mockExit = jest
-      .spyOn(process, "exit")
-      .mockImplementation((() => {}) as unknown as (code?: number) => never);
     mockCreateApp.mockReturnValue({
       listen: jest.fn(),
     } as unknown as Express);
@@ -48,10 +47,10 @@ describe("Server", () => {
 
     jest.isolateModules(async () => {
       await require("../src/server");
-      expect(mockError).toBeCalledWith(
+      expect(mockConsoleError).toBeCalledWith(
         "Error connecting to MongoDB. Check your MONGO_URI env var."
       );
-      expect(mockExit).toBeCalledWith(1);
+      expect(mockShutdown).toBeCalledWith(1);
     });
   });
 });
