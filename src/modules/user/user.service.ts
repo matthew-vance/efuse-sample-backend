@@ -27,7 +27,21 @@ const create = async (
   return createdUser;
 };
 
+const update = async (
+  userId: string,
+  updateUserDto: CreateUserDto
+): Promise<DocumentType<User> | null> => {
+  const updatedUser = await UserModel.findByIdAndUpdate(userId, updateUserDto, {
+    new: true,
+    runValidators: true,
+  });
+  if (updatedUser)
+    cache.set(String(updatedUser._id), JSON.stringify(updatedUser));
+  return updatedUser;
+};
+
 export default {
   readById,
   create,
+  update,
 };

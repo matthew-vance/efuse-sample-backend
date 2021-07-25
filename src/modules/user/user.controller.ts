@@ -21,7 +21,24 @@ const post: RequestHandler = async (req, res, next) => {
   }
 };
 
+const patch: RequestHandler = async (req, res, next) => {
+  try {
+    const user = await service.update(req.params.userId, req.body);
+    if (user) {
+      const locationUri = `/api/user/${user._id}`;
+      res.status(200).json({
+        location: locationUri,
+        entity: user,
+      });
+    } else res.sendStatus(404);
+  } catch (err) {
+    req.log.error(err.toString());
+    next(err);
+  }
+};
+
 export default {
   getById,
   post,
+  patch,
 };

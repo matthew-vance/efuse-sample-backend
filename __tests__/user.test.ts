@@ -10,6 +10,7 @@ jest.mock("mongoose");
 jest.mock("../src/modules/user/user.model", () => ({
   create: jest.fn(),
   findById: jest.fn(),
+  findByIdAndUpdate: jest.fn(),
 }));
 
 const mockUserModel = mocked(UserModel, true);
@@ -87,5 +88,66 @@ describe("User", () => {
         username: "trashpanda",
       })
       .expect(500);
+  });
+
+  test("PATCH /:userId success", async () => {
+    jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue({
+      _id: "someuserid",
+    } as DocumentType<User> | null);
+
+    const response = await request(app)
+      .patch("/api/user/someuserid")
+      .send({
+        firstName: "Yondu",
+        lastName: "Udonta",
+        email: "yondu.udonta@gotg.com",
+        username: "marypoppins",
+      })
+      .expect(200);
+
+    expect(mockUserModel.findByIdAndUpdate).toBeCalledWith(
+      "someuserid",
+      {
+        firstName: "Yondu",
+        lastName: "Udonta",
+        email: "yondu.udonta@gotg.com",
+        username: "marypoppins",
+      },
+      { new: true, runValidators: true }
+    );
+    expect(response.body).toEqual(
+      expect.objectContaining({
+        location: expect.stringContaining("someuserid"),
+        entity: expect.any(Object),
+      })
+    );
+  });
+
+  test("PATCH /:userId fail", async () => {
+    jest.spyOn(UserModel, "findByIdAndUpdate").mockRejectedValue("Whoops...");
+
+    await request(app)
+      .patch("/api/user/someuserid")
+      .send({
+        firstName: "Yondu",
+        lastName: "Udonta",
+        email: "yondu.udonta@gotg.com",
+        username: "marypoppins",
+      })
+      .expect(500);
+  });
+
+  test("PATCH /:userId not found", async () => {
+    jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue(null);
+
+    await request(app)
+      .patch("/api/user/someuserid")
+      .send({
+        firstName: "Yondu",
+        lastName: "Udonta",
+        email: "yondu.udonta@gotg.com",
+        username: "marypoppins",
+      })
+      .expect(404);
   });
 });
