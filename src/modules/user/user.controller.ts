@@ -1,9 +1,10 @@
 import { RequestHandler } from "express";
 import service from "./user.service";
 
-const getById: RequestHandler = (req, res) => {
-  const user = service.readById(req.params.userId);
-  res.status(200).send(user);
+const getById: RequestHandler = async (req, res) => {
+  const user = await service.readById(req.params.userId);
+  if (user) res.status(200).send(user);
+  else res.sendStatus(404);
 };
 
 const post: RequestHandler = async (req, res, next) => {

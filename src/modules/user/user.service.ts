@@ -2,8 +2,8 @@ import { DocumentType } from "@typegoose/typegoose";
 import { CreateUserDto } from "./dto";
 import UserModel, { User } from "./user.model";
 
-const readById = (userId: string): string => {
-  return `User with id ${userId} found!`;
+const readById = async (userId: string): Promise<DocumentType<User> | null> => {
+  return await UserModel.findById(userId);
 };
 
 const create = async (

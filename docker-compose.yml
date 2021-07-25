@@ -6,10 +6,10 @@ services:
       - "5000:5000"
     environment:
       PORT: 5000
-      MONGO_URI: mongodb://mongodb/efuse
+      MONGO_URI: mongodb://db/efuse
     depends_on:
       - mongodb
     restart: always
 
-  mongodb:
+  db:
     image: mongo:5
