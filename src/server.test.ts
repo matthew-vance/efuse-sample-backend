@@ -4,8 +4,16 @@ import { createApp } from "./app";
 import { connectToDb, shutdown } from "./utils";
 import { mockConsoleLog, mockConsoleError } from "../testUtils";
 
+jest.mock("redis");
 jest.mock("../src/app");
-jest.mock("../src/utils");
+jest.mock("../src/utils", () => ({
+  env: {
+    redisUri: "",
+    mongoUri: "testmongouri",
+  },
+  connectToDb: jest.fn(),
+  shutdown: jest.fn(),
+}));
 
 const mockConnectToDb = mocked(connectToDb);
 const mockShutdown = mocked(shutdown);
@@ -43,13 +51,11 @@ describe("Server", () => {
     mockCreateApp.mockReturnValue({
       listen: jest.fn(),
     } as unknown as Express);
-    mockConnectToDb.mockReturnValue(Promise.reject());
+    mockConnectToDb.mockReturnValue(Promise.reject("Whoops..."));
 
     jest.isolateModules(async () => {
       await require("../src/server");
-      expect(mockConsoleError).toBeCalledWith(
-        "Error connecting to MongoDB. Check your MONGO_URI env var."
-      );
+      expect(mockConsoleError).toBeCalledWith("Whoops...");
       expect(mockShutdown).toBeCalledWith(1);
     });
   });

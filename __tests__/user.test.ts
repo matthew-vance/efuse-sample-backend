@@ -5,6 +5,7 @@ import request from "supertest";
 import { createApp } from "../src/app";
 import UserModel, { User } from "../src/modules/user/user.model";
 
+jest.mock("redis");
 jest.mock("mongoose");
 jest.mock("../src/modules/user/user.model", () => ({
   create: jest.fn(),

@@ -11,8 +11,8 @@ const startServer = async () => {
 
   try {
     await connectToDb(mongoUri);
-  } catch {
-    console.error("Error connecting to MongoDB. Check your MONGO_URI env var.");
+  } catch (err) {
+    console.error(err.toString());
     shutdown(1);
   }
 

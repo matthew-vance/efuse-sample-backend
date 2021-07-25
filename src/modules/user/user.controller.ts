@@ -16,7 +16,7 @@ const post: RequestHandler = async (req, res, next) => {
       entity: user,
     });
   } catch (err) {
-    req.log.error(err);
+    req.log.error(err.toString());
     next(err);
   }
 };

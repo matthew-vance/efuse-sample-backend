@@ -11,11 +11,13 @@ afterAll(() => {
 });
 
 it("sets defaults", () => {
-  delete process.env.MONGO_URI;
   delete process.env.NODE_ENV;
+  delete process.env.MONGO_URI;
+  delete process.env.REDIS_URI;
 
   const { env } = require("./env");
 
   expect(env.nodeEnv).toEqual("development");
   expect(env.mongoUri).toEqual("");
+  expect(env.redisUri).toEqual("");
 });
