@@ -11,7 +11,9 @@ it("registers error event handler", () => {
     on: jest.fn((event, cb) => cb("Whoops...")),
     get: jest.fn(),
     set: jest.fn(),
-    del: jest.fn(),
+    sadd: jest.fn(),
+    smembers: jest.fn(),
+    mget: jest.fn(),
   };
   mockRedis.createClient.mockReturnValue(
     mockClient as unknown as redis.RedisClient

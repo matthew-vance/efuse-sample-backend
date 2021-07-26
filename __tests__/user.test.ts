@@ -12,6 +12,11 @@ jest.mock("../src/modules/user/user.model", () => ({
   findById: jest.fn(),
   findByIdAndUpdate: jest.fn(),
 }));
+jest.mock("../src/modules/post/post.model", () => ({
+  create: jest.fn(),
+  findById: jest.fn(),
+  findByIdAndUpdate: jest.fn(),
+}));
 
 const mockUserModel = mocked(UserModel, true);
 

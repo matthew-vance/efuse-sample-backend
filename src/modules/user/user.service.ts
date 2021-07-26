@@ -1,47 +1,24 @@
 import { DocumentType } from "@typegoose/typegoose";
-import { CreateUserDto } from "./dto";
+import CreateUserDto from "./create.user.dto";
 import UserModel, { User } from "./user.model";
-import { cache } from "../../utils";
+import { modelHelper } from "../../utils";
 
-const readById = async (userId: string): Promise<DocumentType<User> | null> => {
-  const cacheUser = await cache.get(userId);
-  if (cacheUser !== null && cacheUser) {
-    return new UserModel(JSON.parse(cacheUser));
-  }
-
-  const dbUser = await UserModel.findById(userId);
-
-  if (dbUser !== null) {
-    cache.set(String(dbUser._id), JSON.stringify(dbUser));
-    return dbUser;
-  }
-
-  return null;
-};
+const findById = async (userId: string): Promise<DocumentType<User> | null> =>
+  modelHelper.findById<User>(userId, UserModel);
 
 const create = async (
   createUserDto: CreateUserDto
-): Promise<DocumentType<User>> => {
-  const createdUser = await UserModel.create(createUserDto);
-  cache.set(String(createdUser._id), JSON.stringify(createdUser));
-  return createdUser;
-};
+): Promise<DocumentType<User>> =>
+  modelHelper.create<User>(createUserDto, UserModel);
 
 const update = async (
   userId: string,
   updateUserDto: CreateUserDto
-): Promise<DocumentType<User> | null> => {
-  const updatedUser = await UserModel.findByIdAndUpdate(userId, updateUserDto, {
-    new: true,
-    runValidators: true,
-  });
-  if (updatedUser)
-    cache.set(String(updatedUser._id), JSON.stringify(updatedUser));
-  return updatedUser;
-};
+): Promise<DocumentType<User> | null> =>
+  modelHelper.update<User>(userId, updateUserDto, UserModel);
 
 export default {
-  readById,
+  findById,
   create,
   update,
 };
