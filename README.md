@@ -29,6 +29,16 @@ $ npm run build
 $ docker build -t efuse-sample .
 ```
 
+## Environment Setup
+
+```bash
+cp .env.example .env
+```
+
+Replace example values with valid values for your environment.
+
+Environment is preconfigured when running with the provided docker-compose.yml.
+
 ## Running the app
 
 ```bash
@@ -45,7 +55,7 @@ $ node dist/server.js
 $ docker-compose up -d --build
 ```
 
-## Test
+## Testing
 
 ```bash
 # unit tests
