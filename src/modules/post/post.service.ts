@@ -11,6 +11,7 @@ const create = async (
   createPostDto: CreatePostDto
 ): Promise<DocumentType<Post>> => {
   const post = await modelHelper.create<Post>(createPostDto, PostModel);
+
   await cache.sadd([`${post.user}posts`, String(post._id)]);
   return post;
 };
@@ -23,9 +24,9 @@ const update = async (
 
 const find = async (
   filter: FilterQuery<DocumentType<Post>>
-): Promise<DocumentType<Post>[] | null> => {
-  const cachePostIds = await cache.smembers(`${filter.user}posts`); //
-  if (cachePostIds.length > 0) {
+): Promise<DocumentType<Post>[]> => {
+  const cachePostIds = await cache.smembers(`${filter.user}posts`);
+  if (cachePostIds?.length > 0) {
     const posts = await cache.mget(cachePostIds);
     return posts.map((post) => new PostModel(JSON.parse(post)));
   }
@@ -36,7 +37,7 @@ const find = async (
     await cache.sadd(dbPostIds);
     return posts;
   }
-  return null;
+  return [];
 };
 
 export default {

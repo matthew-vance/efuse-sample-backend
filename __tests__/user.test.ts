@@ -4,6 +4,7 @@ import { Express } from "express";
 import request from "supertest";
 import { createApp } from "../src/app";
 import UserModel, { User } from "../src/modules/user/user.model";
+import PostModel, { Post } from "../src/modules/post/post.model";
 
 jest.mock("redis");
 jest.mock("../src/modules/user/user.model", () => ({
@@ -15,6 +16,7 @@ jest.mock("../src/modules/post/post.model", () => ({
   create: jest.fn(),
   findById: jest.fn(),
   findByIdAndUpdate: jest.fn(),
+  find: jest.fn(),
 }));
 
 const mockUserModel = mocked(UserModel, true);
@@ -162,7 +164,30 @@ describe("User", () => {
   test("PATCH /:userId invalid", async () => {
     await request(app)
       .patch("/api/user/someuserid")
-      .send({ email: "Thanos" })
+      .send({ email: "Nebula" })
       .expect(422);
+  });
+
+  test("GET /:userId/posts success", async () => {
+    jest
+      .spyOn(PostModel, "find")
+      .mockResolvedValue([{ _id: "somepostid" }] as DocumentType<Post>[]);
+
+    const response = await request(app)
+      .get("/api/user/someuserid/posts")
+      .expect(200);
+
+    expect(PostModel.find).toBeCalledWith({ user: "someuserid" });
+    expect(response.body).toEqual([
+      {
+        _id: "somepostid",
+      },
+    ]);
+  });
+
+  test("GET /:userId/posts not found", async () => {
+    jest.spyOn(PostModel, "find").mockResolvedValue([] as DocumentType<Post>[]);
+
+    await request(app).get("/api/user/someuserid/posts").expect(404);
   });
 });

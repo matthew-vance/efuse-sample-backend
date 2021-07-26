@@ -9,7 +9,12 @@ import { User } from "../user/user.model";
 
 @modelOptions({ schemaOptions: { timestamps: true } })
 export class Post {
-  @prop({ required: true, ref: "User", type: Schema.Types.ObjectId })
+  @prop({
+    required: true,
+    ref: "User",
+    type: Schema.Types.ObjectId,
+    immutable: true,
+  })
   user!: Ref<User>;
 
   @prop({ required: true })

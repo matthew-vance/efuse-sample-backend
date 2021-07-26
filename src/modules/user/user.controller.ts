@@ -40,7 +40,7 @@ const patch: RequestHandler = async (req, res, next) => {
 
 const getPosts: RequestHandler = async (req, res) => {
   const posts = await postService.find({ user: req.params.userId });
-  if (posts) res.status(200).send(posts);
+  if (posts.length > 0) res.status(200).send(posts);
   else res.sendStatus(404);
 };
 

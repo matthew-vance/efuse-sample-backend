@@ -10,7 +10,6 @@ const createPostSchema = Joi.object({
 });
 
 const updatePostSchema = Joi.object({
-  user: Joi.string(),
   title: Joi.string(),
   content: Joi.string(),
 });
