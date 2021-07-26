@@ -6,7 +6,6 @@ import { createApp } from "../src/app";
 import UserModel, { User } from "../src/modules/user/user.model";
 
 jest.mock("redis");
-jest.mock("mongoose");
 jest.mock("../src/modules/user/user.model", () => ({
   create: jest.fn(),
   findById: jest.fn(),
@@ -95,6 +94,10 @@ describe("User", () => {
       .expect(500);
   });
 
+  test("POST / invalid", async () => {
+    await request(app).post("/api/user").send({}).expect(422);
+  });
+
   test("PATCH /:userId success", async () => {
     jest.spyOn(UserModel, "findByIdAndUpdate").mockResolvedValue({
       _id: "someuserid",
@@ -154,5 +157,12 @@ describe("User", () => {
         username: "marypoppins",
       })
       .expect(404);
+  });
+
+  test("PATCH /:userId invalid", async () => {
+    await request(app)
+      .patch("/api/user/someuserid")
+      .send({ email: "Thanos" })
+      .expect(422);
   });
 });
